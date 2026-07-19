@@ -1,0 +1,49 @@
+---
+import type { Artwork } from '../data/artworks';
+
+interface Props {
+  artwork: Artwork;
+  index: number;
+  compact?: boolean;
+}
+
+const { artwork, index, compact = false } = Astro.props;
+---
+
+<article
+  class:list={['catalog-card', `catalog-card--${artwork.orientation}`, compact && 'catalog-card--compact']}
+  data-gallery-card
+  data-category={artwork.category}
+  data-search={`${artwork.title} ${artwork.catalogNumber} ${artwork.kind}`.toLowerCase()}
+>
+  <button
+    class="catalog-card__image-button"
+    type="button"
+    data-lightbox-item
+    data-lightbox-index={index}
+    data-lightbox-src={artwork.image}
+    data-lightbox-alt={artwork.alt}
+    data-lightbox-title={artwork.title}
+    data-lightbox-meta={`${artwork.catalogNumber} · ${artwork.categoryLabel}`}
+    data-lightbox-detail={`/artwork/${artwork.slug}/`}
+    aria-label={`Enlarge ${artwork.title}`}
+  >
+    <img
+      src={artwork.thumbnail}
+      alt={artwork.alt}
+      width={artwork.width}
+      height={artwork.height}
+      loading={index < 6 ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+    <span class="catalog-card__zoom" aria-hidden="true">View</span>
+  </button>
+
+  <div class="catalog-card__body">
+    <div>
+      <p>{artwork.categoryLabel}</p>
+      <h3><a href={`/artwork/${artwork.slug}/`}>{artwork.title}</a></h3>
+    </div>
+    <span>{artwork.catalogNumber}</span>
+  </div>
+</article>

@@ -1,40 +1,27 @@
 ---
+interface Props { solid?: boolean; }
+const { solid = false } = Astro.props;
 const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Studio', href: '#studio' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '/#about' },
+  { label: 'Gallery', href: '/gallery/' },
+  { label: 'Studio', href: '/#studio' },
+  { label: 'Contact', href: '/#contact' },
 ];
 ---
 
-<header class="site-header" data-site-header>
+<header class:list={['site-header', solid && 'site-header--solid']} data-site-header>
   <div class="site-header__inner shell">
     <a class="brand" href="/" aria-label="Brett's Flow Art home">
       <img src="/images/logo-placeholder.svg" alt="" width="44" height="44" />
-      <span>
-        <strong>Brett's Flow Art</strong>
-        <small>Fluid acrylic artist</small>
-      </span>
+      <span><strong>Brett's Flow Art</strong><small>Fluid acrylic artist</small></span>
     </a>
-
     <div class="site-header__actions">
       <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-site-nav>
         {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
       </nav>
-
-      <button class="icon-button" type="button" data-theme-toggle aria-label="Switch colour theme" title="Switch colour theme">
-        <span aria-hidden="true" data-theme-icon>◐</span>
-      </button>
-
-      <button
-        class="menu-button"
-        type="button"
-        aria-controls="site-navigation"
-        aria-expanded="false"
-        data-menu-toggle
-      >
-        <span class="menu-button__lines" aria-hidden="true"></span>
-        <span class="visually-hidden">Open navigation</span>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="Switch colour theme" title="Switch colour theme"><span aria-hidden="true">◐</span></button>
+      <button class="menu-button" type="button" aria-controls="site-navigation" aria-expanded="false" data-menu-toggle>
+        <span class="menu-button__lines" aria-hidden="true"></span><span class="visually-hidden">Open navigation</span>
       </button>
     </div>
   </div>
@@ -45,31 +32,17 @@ const navItems = [
   const nav = document.querySelector('[data-site-nav]');
   const menuButton = document.querySelector('[data-menu-toggle]');
   const themeButton = document.querySelector('[data-theme-toggle]');
-
-  const updateHeader = () => {
-    header?.classList.toggle('site-header--scrolled', window.scrollY > 24);
-  };
-
-  updateHeader();
-  window.addEventListener('scroll', updateHeader, { passive: true });
-
+  const updateHeader = () => header?.classList.toggle('site-header--scrolled', window.scrollY > 24);
+  updateHeader(); window.addEventListener('scroll', updateHeader, { passive: true });
   menuButton?.addEventListener('click', () => {
     const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
-    menuButton.setAttribute('aria-expanded', String(!isOpen));
-    nav?.classList.toggle('site-nav--open', !isOpen);
+    menuButton.setAttribute('aria-expanded', String(!isOpen)); nav?.classList.toggle('site-nav--open', !isOpen);
   });
-
-  nav?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      menuButton?.setAttribute('aria-expanded', 'false');
-      nav.classList.remove('site-nav--open');
-    });
-  });
-
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+    menuButton?.setAttribute('aria-expanded', 'false'); nav.classList.remove('site-nav--open');
+  }));
   themeButton?.addEventListener('click', () => {
-    const current = document.documentElement.dataset.theme;
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem('bretts-flow-art-theme', next);
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next; localStorage.setItem('bretts-flow-art-theme', next);
   });
 </script>

@@ -1,37 +1,7 @@
 ---
-import { Image } from 'astro:assets';
-import purplePour from '../assets/images/header.jpeg';
-import bluePour from '../assets/images/art3.jpeg';
-import paintedStool from '../assets/images/stool.jpg';
-
-const artworks = [
-  {
-    title: 'Purple, Gold & White Pour',
-    category: 'Fluid acrylic on canvas',
-    image: purplePour,
-    alt: 'Purple, gold and white fluid acrylic painting with sweeping organic cells',
-    className: 'gallery-card--wide',
-  },
-  {
-    title: 'Blue & Copper Flow',
-    category: 'Fluid acrylic on canvas',
-    image: bluePour,
-    alt: 'Blue, copper and white abstract fluid acrylic artwork',
-    className: 'gallery-card--tall',
-  },
-  {
-    title: 'Painted Studio Stool',
-    category: 'Functional art',
-    image: paintedStool,
-    alt: 'Wooden stool decorated with colourful poured acrylic paint',
-    className: '',
-  },
-];
-
-const placeholders = Array.from({ length: 5 }, (_, index) => ({
-  title: `New artwork ${index + 4}`,
-  src: `/images/placeholders/artwork-${index + 4}.svg`,
-}));
+import GalleryCard from './GalleryCard.astro';
+import GalleryLightbox from './GalleryLightbox.astro';
+import { featuredArtworks } from '../data/artworks';
 ---
 
 <section class="gallery-section section" id="gallery" aria-labelledby="gallery-title">
@@ -41,100 +11,19 @@ const placeholders = Array.from({ length: 5 }, (_, index) => ({
         <p class="eyebrow">Selected artwork</p>
         <h2 id="gallery-title">One process. Endless possibilities.</h2>
       </div>
-      <p>
-        Brett's pours celebrate the tension between intention and chance. Select an available image to view it in the
-        full-screen gallery.
-      </p>
+      <div class="section-heading__action">
+        <p>Brett's pours celebrate the tension between intention and chance. Explore the complete online catalogue.</p>
+        <a class="text-link" href="/gallery/">View all artwork →</a>
+      </div>
     </div>
 
-    <div class="gallery-grid" data-gallery>
-      {artworks.map((artwork, index) => (
-        <button
-          class:list={['gallery-card', artwork.className]}
-          type="button"
-          data-lightbox-item
-          data-lightbox-index={index}
-          data-lightbox-src={artwork.image.src}
-          data-lightbox-alt={artwork.alt}
-          data-lightbox-title={artwork.title}
-          aria-label={`Enlarge ${artwork.title}`}
-        >
-          <Image
-            src={artwork.image}
-            alt={artwork.alt}
-            loading="lazy"
-            quality={84}
-            widths={[480, 720, 960]}
-            sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
-          />
-          <span class="gallery-card__overlay">
-            <strong>{artwork.title}</strong>
-            <small>{artwork.category}</small>
-          </span>
-        </button>
-      ))}
+    <div class="catalog-grid catalog-grid--featured" data-gallery-grid>
+      {featuredArtworks.map((artwork, index) => <GalleryCard artwork={artwork} index={index} compact />)}
+    </div>
 
-      {placeholders.map((placeholder) => (
-        <article class="gallery-card gallery-card--placeholder" aria-label={`${placeholder.title} placeholder`}>
-          <img src={placeholder.src} alt="Artwork image placeholder" loading="lazy" width="800" height="1000" />
-          <span class="gallery-card__overlay">
-            <strong>Artwork coming soon</strong>
-            <small>Image placeholder</small>
-          </span>
-        </article>
-      ))}
+    <div class="gallery-section__button">
+      <a class="button button--catalog" href="/gallery/">Explore the full gallery</a>
     </div>
   </div>
-
-  <dialog class="lightbox" data-lightbox aria-label="Artwork viewer">
-    <button class="lightbox__close" type="button" data-lightbox-close aria-label="Close artwork viewer">×</button>
-    <button class="lightbox__nav lightbox__nav--previous" type="button" data-lightbox-previous aria-label="Previous artwork">‹</button>
-    <figure>
-      <img data-lightbox-image src="" alt="" />
-      <figcaption data-lightbox-caption></figcaption>
-    </figure>
-    <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next aria-label="Next artwork">›</button>
-  </dialog>
+  <GalleryLightbox />
 </section>
-
-<script>
-  const items = Array.from(document.querySelectorAll('[data-lightbox-item]'));
-  const dialog = document.querySelector('[data-lightbox]');
-  const image = dialog?.querySelector('[data-lightbox-image]');
-  const caption = dialog?.querySelector('[data-lightbox-caption]');
-  const closeButton = dialog?.querySelector('[data-lightbox-close]');
-  const previousButton = dialog?.querySelector('[data-lightbox-previous]');
-  const nextButton = dialog?.querySelector('[data-lightbox-next]');
-  let activeIndex = 0;
-
-  const showItem = (index) => {
-    const item = items[index];
-    if (!(item instanceof HTMLElement) || !(image instanceof HTMLImageElement) || !caption) return;
-
-    activeIndex = index;
-    image.src = item.dataset.lightboxSrc ?? '';
-    image.alt = item.dataset.lightboxAlt ?? '';
-    caption.textContent = item.dataset.lightboxTitle ?? '';
-  };
-
-  const openLightbox = (index) => {
-    if (!(dialog instanceof HTMLDialogElement)) return;
-    showItem(index);
-    dialog.showModal();
-  };
-
-  items.forEach((item, index) => item.addEventListener('click', () => openLightbox(index)));
-  closeButton?.addEventListener('click', () => dialog instanceof HTMLDialogElement && dialog.close());
-  previousButton?.addEventListener('click', () => showItem((activeIndex - 1 + items.length) % items.length));
-  nextButton?.addEventListener('click', () => showItem((activeIndex + 1) % items.length));
-
-  dialog?.addEventListener('click', (event) => {
-    if (event.target === dialog && dialog instanceof HTMLDialogElement) dialog.close();
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
-    if (event.key === 'ArrowLeft') showItem((activeIndex - 1 + items.length) % items.length);
-    if (event.key === 'ArrowRight') showItem((activeIndex + 1) % items.length);
-  });
-</script>

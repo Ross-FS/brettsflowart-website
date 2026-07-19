@@ -1,0 +1,4 @@
+art1.JPG = ART1839.JPG
+ART1840.JPG = art2.JPG
+ART1884.jpeg = art3.jpeg
+ART1838.JPG = Stool.JPG

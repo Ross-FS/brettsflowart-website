@@ -1,0 +1,68 @@
+<dialog class="lightbox catalog-lightbox" data-lightbox aria-label="Artwork viewer">
+  <button class="lightbox__close" type="button" data-lightbox-close aria-label="Close artwork viewer">×</button>
+  <button class="lightbox__nav lightbox__nav--previous" type="button" data-lightbox-previous aria-label="Previous artwork">‹</button>
+  <figure>
+    <div class="catalog-lightbox__image-wrap"><img data-lightbox-image src="" alt="" /></div>
+    <figcaption>
+      <span data-lightbox-caption></span>
+      <small data-lightbox-meta></small>
+      <a class="button button--glass" data-lightbox-detail href="/gallery/">Artwork details</a>
+    </figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next aria-label="Next artwork">›</button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector('[data-lightbox]');
+  const image = dialog?.querySelector('[data-lightbox-image]');
+  const caption = dialog?.querySelector('[data-lightbox-caption]');
+  const meta = dialog?.querySelector('[data-lightbox-meta]');
+  const detailLink = dialog?.querySelector('[data-lightbox-detail]');
+  const closeButton = dialog?.querySelector('[data-lightbox-close]');
+  const previousButton = dialog?.querySelector('[data-lightbox-previous]');
+  const nextButton = dialog?.querySelector('[data-lightbox-next]');
+  let activeItem;
+
+  const availableItems = () =>
+    Array.from(document.querySelectorAll('[data-lightbox-item]')).filter((item) => {
+      const card = item.closest('[data-gallery-card]');
+      return !(card instanceof HTMLElement) || !card.hidden;
+    });
+
+  const showItem = (item) => {
+    if (!(item instanceof HTMLElement) || !(image instanceof HTMLImageElement) || !caption || !meta) return;
+    activeItem = item;
+    image.src = item.dataset.lightboxSrc ?? '';
+    image.alt = item.dataset.lightboxAlt ?? '';
+    caption.textContent = item.dataset.lightboxTitle ?? '';
+    meta.textContent = item.dataset.lightboxMeta ?? '';
+    if (detailLink instanceof HTMLAnchorElement) detailLink.href = item.dataset.lightboxDetail ?? '/gallery/';
+  };
+
+  const move = (offset) => {
+    const items = availableItems();
+    const current = items.indexOf(activeItem);
+    if (!items.length) return;
+    showItem(items[(current + offset + items.length) % items.length]);
+  };
+
+  document.querySelectorAll('[data-lightbox-item]').forEach((item) => {
+    item.addEventListener('click', () => {
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      showItem(item);
+      dialog.showModal();
+    });
+  });
+
+  closeButton?.addEventListener('click', () => dialog instanceof HTMLDialogElement && dialog.close());
+  previousButton?.addEventListener('click', () => move(-1));
+  nextButton?.addEventListener('click', () => move(1));
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog && dialog instanceof HTMLDialogElement) dialog.close();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+    if (event.key === 'ArrowLeft') move(-1);
+    if (event.key === 'ArrowRight') move(1);
+  });
+</script>

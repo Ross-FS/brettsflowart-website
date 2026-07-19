@@ -6,6 +6,7 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   ogImage?: string;
+  structuredData?: Record<string, unknown>;
 }
 
 const {
@@ -13,14 +14,14 @@ const {
   description = 'Original fluid acrylic artwork by Brett Forbes-Stephen, a self-taught paint-pouring artist based in Donnybrook, Western Australia.',
   canonicalPath = '/',
   ogImage = '/images/og-image.jpg',
+  structuredData,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://brettsflowart.au');
 const canonicalUrl = new URL(canonicalPath, siteUrl);
 const ogImageUrl = new URL(ogImage, siteUrl);
 
-const schema = {
-  '@context': 'https://schema.org',
+const personSchema = {
   '@type': 'Person',
   name: 'Brett Forbes-Stephen',
   jobTitle: 'Fluid Acrylic Artist',
@@ -35,6 +36,11 @@ const schema = {
     addressRegion: 'WA',
     addressCountry: 'AU',
   },
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': structuredData ? [personSchema, structuredData] : [personSchema],
 };
 ---
 

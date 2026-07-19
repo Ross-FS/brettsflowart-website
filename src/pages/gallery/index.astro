@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import GalleryCatalogue from '../../components/GalleryCatalogue.astro';
+import { artworks } from '../../data/artworks';
+
+const paintings = artworks.filter((artwork) => artwork.category === 'painting').length;
+const functional = artworks.filter((artwork) => artwork.category === 'functional-art').length;
+---
+
+<MainLayout
+  title="Artwork Gallery | Brett's Flow Art"
+  description="Explore original fluid acrylic paintings and functional art by Brett Forbes-Stephen in Donnybrook, Western Australia."
+  canonicalPath="/gallery/"
+>
+  <SiteHeader solid />
+  <main id="main-content" class="subpage-main">
+    <header class="gallery-page-hero shell">
+      <p class="eyebrow">The collection</p>
+      <h1>Artwork shaped by movement, colour and chance.</h1>
+      <p>
+        Browse Brett's fluid acrylic collection. Catalogue information can be updated as titles, dimensions and
+        availability are confirmed.
+      </p>
+      <dl class="gallery-page-stats">
+        <div><dt>Works online</dt><dd>{artworks.length}</dd></div>
+        <div><dt>Original artwork</dt><dd>{paintings}</dd></div>
+        <div><dt>Functional art</dt><dd>{functional}</dd></div>
+      </dl>
+    </header>
+
+    <div class="shell"><GalleryCatalogue /></div>
+  </main>
+  <SiteFooter />
+</MainLayout>
