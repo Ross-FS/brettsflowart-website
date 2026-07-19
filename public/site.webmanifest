@@ -1,0 +1,17 @@
+{
+  "name": "Brett's Flow Art",
+  "short_name": "Brett's Flow Art",
+  "description": "Original fluid acrylic artwork by Brett Forbes-Stephen in Donnybrook, Western Australia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcfaf7",
+  "theme_color": "#4b286d",
+  "icons": [
+    {
+      "src": "/images/favicon-placeholder.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

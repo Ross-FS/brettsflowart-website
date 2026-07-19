@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../assets/images/header.jpeg';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <Image
+    class="hero__image"
+    src={heroImage}
+    alt="Purple, gold and white fluid acrylic artwork by Brett Forbes-Stephen"
+    loading="eager"
+    fetchpriority="high"
+    quality={88}
+  />
+  <div class="hero__veil"></div>
+
+  <div class="hero__content shell">
+    <p class="eyebrow hero__eyebrow">Donnybrook · Western Australia</p>
+    <h1 id="hero-title">Brett's Flow Art</h1>
+    <p class="hero__lead">
+      Original fluid acrylic artwork shaped by colour, movement and the freedom of an unpredictable medium.
+    </p>
+    <div class="hero__buttons">
+      <a class="button button--primary" href="#gallery">View the gallery</a>
+      <a class="button button--glass" href="mailto:hello@brettsflowart.au">Contact Brett</a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#about" aria-label="Scroll to meet the artist">
+    <span>Meet the artist</span>
+    <span aria-hidden="true">↓</span>
+  </a>
+</section>

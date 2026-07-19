@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Brett's Flow Art logo placeholder</title>
+  <desc id="desc">Abstract circular purple logo placeholder</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d8bce8"/>
+      <stop offset="0.55" stop-color="#65398b"/>
+      <stop offset="1" stop-color="#341d46"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="62" fill="url(#g)"/>
+  <path d="M25 74c21-38 42-43 78-25-16 0-23 4-30 12 12 2 21 8 28 19-33-19-53-17-76-6Z" fill="#fff" fill-opacity=".78"/>
+  <text x="64" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="34" font-weight="700" fill="#fff">BF</text>
+</svg>

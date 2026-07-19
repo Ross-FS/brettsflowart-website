@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "Brett's Flow Art | Fluid Acrylic Artist in Donnybrook, WA",
+  description = 'Original fluid acrylic artwork by Brett Forbes-Stephen, a self-taught paint-pouring artist based in Donnybrook, Western Australia.',
+  canonicalPath = '/',
+  ogImage = '/images/og-image.jpg',
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://brettsflowart.au');
+const canonicalUrl = new URL(canonicalPath, siteUrl);
+const ogImageUrl = new URL(ogImage, siteUrl);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Brett Forbes-Stephen',
+  jobTitle: 'Fluid Acrylic Artist',
+  description,
+  email: 'mailto:hello@brettsflowart.au',
+  telephone: '+61 412 566 529',
+  url: siteUrl.toString(),
+  image: ogImageUrl.toString(),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Donnybrook',
+    addressRegion: 'WA',
+    addressCountry: 'AU',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en-AU" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#4b286d" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="/images/favicon-placeholder.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:site_name" content="Brett's Flow Art" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Purple, gold and white fluid acrylic artwork by Brett Forbes-Stephen" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      (() => {
+        const storedTheme = localStorage.getItem('bretts-flow-art-theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = storedTheme ?? (systemPrefersDark ? 'dark' : 'light');
+      })();
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <slot />
+
+  </body>
+</html>

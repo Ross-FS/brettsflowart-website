@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Portrait placeholder</title>
+  <desc id="desc">Placeholder image to be replaced with a portrait of Brett</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2e8f7"/>
+      <stop offset="1" stop-color="#a97fd0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <circle cx="300" cy="235" r="108" fill="#4b286d" fill-opacity=".72"/>
+  <path d="M106 600c10-150 91-236 194-236s184 86 194 236Z" fill="#4b286d" fill-opacity=".72"/>
+  <text x="300" y="552" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#fff">PORTRAIT PLACEHOLDER</text>
+</svg>
