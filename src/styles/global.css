@@ -1124,3 +1124,46 @@ html[data-theme='dark'] .gallery-page-stats dd { color: var(--lavender-300); }
     grid-template-columns: 1fr;
   }
 }
+
+/* Stage 3.1: cross-browser lightbox image sizing and loading states */
+.catalog-lightbox {
+  overflow: hidden;
+}
+
+.catalog-lightbox__image-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.catalog-lightbox__image-wrap img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, calc(96vw - 9rem));
+  max-height: calc(94vh - 9rem);
+  object-fit: contain;
+}
+
+.catalog-lightbox__message {
+  margin: 0;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.78);
+  text-align: center;
+}
+
+.catalog-lightbox__message[hidden],
+.catalog-lightbox__image-wrap img[hidden] {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .catalog-lightbox__image-wrap img {
+    max-width: calc(100vw - 1.6rem);
+    max-height: calc(94vh - 11rem);
+  }
+}

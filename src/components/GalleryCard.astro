@@ -22,6 +22,7 @@ const { artwork, index, compact = false } = Astro.props;
     data-lightbox-item
     data-lightbox-index={index}
     data-lightbox-src={artwork.image}
+    data-lightbox-fallback={artwork.thumbnail}
     data-lightbox-alt={artwork.alt}
     data-lightbox-title={artwork.title}
     data-lightbox-meta={`${artwork.catalogNumber} · ${artwork.categoryLabel}`}
