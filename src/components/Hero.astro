@@ -1,18 +1,15 @@
----
-import { Image } from 'astro:assets';
-import heroImage from '../assets/images/header.jpeg';
----
-
 <section class="hero" aria-labelledby="hero-title">
-  <Image
+  <img
     class="hero__image"
-    src={heroImage}
+    src="/images/header.jpg"
     alt="Purple, gold and white fluid acrylic artwork by Brett Forbes-Stephen"
+    width="1600"
+    height="1067"
     loading="eager"
     fetchpriority="high"
-    quality={88}
+    decoding="async"
   />
-  <div class="hero__veil"></div>
+  <div class="hero__veil" aria-hidden="true"></div>
 
   <div class="hero__content shell">
     <p class="eyebrow hero__eyebrow">Donnybrook · Western Australia</p>
