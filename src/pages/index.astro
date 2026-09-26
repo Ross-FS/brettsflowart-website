@@ -4,8 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import Hero from '../components/Hero.astro';
 import ContactCard from '../components/ContactCard.astro';
 import Biography from '../components/Biography.astro';
-import FeaturedGallery from '../components/FeaturedGallery.astro';
-import ShopCta from '../components/ShopCta.astro';
+import EtsyListings from '../components/EtsyListings.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 ---
 
@@ -15,8 +14,14 @@ import SiteFooter from '../components/SiteFooter.astro';
     <Hero />
     <ContactCard />
     <Biography />
-    <FeaturedGallery />
-    <ShopCta />
+    <section class="section shell" aria-labelledby="etsy-preview-title">
+      <div class="section-heading section-heading__action">
+        <p class="eyebrow">Available now</p>
+        <h2 id="etsy-preview-title">Shop Brett's latest work</h2>
+        <p>Current artwork, prices and availability are supplied directly from Brett's Etsy store.</p>
+      </div>
+      <EtsyListings preview />
+    </section>
   </main>
   <SiteFooter />
 </MainLayout>

@@ -1,0 +1,35 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import EtsyListings from '../components/EtsyListings.astro';
+---
+
+<MainLayout
+  title="Shop | Brett's Flow Art"
+  description="Shop original fluid acrylic artwork by Brett Forbes-Stephen. Current works and prices are supplied directly from Brett's Etsy shop."
+  canonicalPath="/shop/"
+>
+  <SiteHeader solid />
+  <main id="main-content">
+    <section class="section shell shop-page">
+      <header class="section-heading shop-page__heading">
+        <p class="eyebrow">Available artwork</p>
+        <h1>Shop Brett's work</h1>
+        <p>
+          Browse Brett's current Etsy collection. Prices and availability are loaded directly from Etsy, and purchases
+          are completed securely on Etsy.
+        </p>
+      </header>
+      <EtsyListings />
+    </section>
+  </main>
+  <SiteFooter />
+</MainLayout>
+
+<style>
+  .shop-page { padding-top:clamp(8rem,12vw,11rem); padding-bottom:clamp(5rem,10vw,9rem); }
+  .shop-page__heading { max-width:46rem; }
+  .shop-page__heading h1 { margin-bottom:1rem; font-family:var(--font-display); font-size:clamp(3.8rem,8vw,7rem); font-weight:700; color:var(--plum-800); }
+  .shop-page__heading p:last-child { color:var(--muted); font-size:1.08rem; }
+</style>
