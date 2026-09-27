@@ -1,7 +1,8 @@
-const ETSY_API = 'https://openapi.etsy.com/v3/application';
+const ETSY_API = 'https://api.etsy.com/v3/application';
 const ETSY_TOKEN_URL = 'https://api.etsy.com/v3/public/oauth/token';
 const ETSY_AUTHORIZE_URL = 'https://www.etsy.com/oauth/connect';
 const REDIRECT_URI = 'https://brettsflowart.au/api/etsy/callback';
+const SHOP_NAME = 'BrettsFlowArt';
 const PAGE_SIZE = 100;
 const CACHE_SECONDS = 300;
 const TOKEN_KEY = 'etsy:oauth:tokens';
@@ -148,12 +149,20 @@ async function getAccessToken(env, keystring) {
   return { accessToken: tokens.access_token, tokens };
 }
 
-async function getOwnShop(apiKey, accessToken) {
-  const userId = String(accessToken || '').split('.')[0];
-  if (!/^\d+$/.test(userId)) throw new Error('Could not determine Etsy user ID from OAuth token.');
+async function findOwnShop(apiKey) {
+  const data = await etsyFetch(
+    `/shops?shop_name=${encodeURIComponent(SHOP_NAME)}&limit=25`,
+    apiKey,
+  );
 
-  const shop = await etsyFetch(`/users/${userId}/shops`, apiKey);
-  if (!shop?.shop_id) throw new Error('Could not determine the Etsy shop for the authorised seller.');
+  const shop = (data.results || []).find(
+    (item) => String(item.shop_name || '').toLowerCase() === SHOP_NAME.toLowerCase(),
+  );
+
+  if (!shop?.shop_id) {
+    throw new Error(`Could not find Etsy shop ${SHOP_NAME}.`);
+  }
+
   return shop;
 }
 
@@ -163,8 +172,15 @@ async function getAllActiveListings(shopId, apiKey, accessToken) {
   let total = Infinity;
 
   while (offset < total) {
+    const params = new URLSearchParams({
+      state: 'active',
+      limit: String(PAGE_SIZE),
+      offset: String(offset),
+      includes: 'Images',
+    });
+
     const data = await etsyFetch(
-      `/shops/${shopId}/listings?state=active&limit=${PAGE_SIZE}&offset=${offset}`,
+      `/shops/${shopId}/listings?${params.toString()}`,
       apiKey,
       accessToken,
     );
@@ -177,29 +193,7 @@ async function getAllActiveListings(shopId, apiKey, accessToken) {
     offset += page.length;
   }
 
-  return all;
-}
-
-async function hydrateListings(listings, apiKey) {
-  const results = [];
-
-  for (let i = 0; i < listings.length; i += PAGE_SIZE) {
-    const ids = listings
-      .slice(i, i + PAGE_SIZE)
-      .map((listing) => listing.listing_id)
-      .filter(Boolean);
-
-    if (ids.length === 0) continue;
-
-    const params = new URLSearchParams();
-    params.set('listing_ids', ids.join(','));
-    params.set('includes', 'Images');
-
-    const data = await etsyFetch(`/listings/batch?${params.toString()}`, apiKey);
-    results.push(...(data.results || []));
-  }
-
-  return results;
+  return { listings: all, total };
 }
 
 async function handleConnect(env) {
@@ -308,14 +302,14 @@ async function handleEtsyListings(request, env, ctx) {
   try {
     const apiKey = `${keystring}:${sharedSecret}`;
     const { accessToken } = await getAccessToken(env, keystring);
-    const shop = await getOwnShop(apiKey, accessToken);
-    const active = await getAllActiveListings(shop.shop_id, apiKey, accessToken);
-    const detailed = await hydrateListings(active, apiKey);
+    const shop = await findOwnShop(apiKey);
+    const { listings: active, total: etsyCount } = await getAllActiveListings(
+      shop.shop_id,
+      apiKey,
+      accessToken,
+    );
 
-    const detailedById = new Map(detailed.map((item) => [item.listing_id, item]));
-    const merged = active.map((item) => ({ ...item, ...(detailedById.get(item.listing_id) || {}) }));
-
-    const listings = merged
+    const listings = active
       .map((listing) => ({
         id: listing.listing_id,
         title: listing.title,
@@ -334,11 +328,11 @@ async function handleEtsyListings(request, env, ctx) {
       shop: shop.shop_name || 'BrettsFlowArt',
       shopId: shop.shop_id,
       shopUrl: 'https://brettsflowart.etsy.com',
-      etsyReportedActiveCount: Number(shop.listing_active_count || 0),
+      etsyReportedActiveCount: Number.isFinite(etsyCount) ? etsyCount : Number(shop.listing_active_count || 0),
       count: listings.length,
       listings,
       fetchedAt: new Date().toISOString(),
-      source: 'oauth-getListingsByShop',
+      source: 'oauth-getListingsByShop-includes-images',
     });
 
     ctx.waitUntil(cache.put(cacheKey, response.clone()));
@@ -352,7 +346,11 @@ async function handleEtsyListings(request, env, ctx) {
         connectUrl: '/api/etsy/connect',
       }, 503);
     }
-    return json({ error: 'Unable to load the Etsy shop right now.', code: 'ETSY_API_ERROR' }, 502);
+    return json({
+      error: 'Unable to load the Etsy shop right now.',
+      code: 'ETSY_API_ERROR',
+      detail: String(error?.message || error).slice(0, 500),
+    }, 502);
   }
 }
 
