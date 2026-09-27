@@ -28,8 +28,28 @@ import EtsyListings from '../components/EtsyListings.astro';
 </MainLayout>
 
 <style>
-  .shop-page { padding-top:clamp(8rem,12vw,11rem); padding-bottom:clamp(5rem,10vw,9rem); }
-  .shop-page__heading { max-width:46rem; }
-  .shop-page__heading h1 { margin-bottom:1rem; font-family:var(--font-display); font-size:clamp(3.8rem,8vw,7rem); font-weight:700; color:var(--plum-800); }
-  .shop-page__heading p:last-child { color:var(--muted); font-size:1.08rem; }
+  .shop-page {
+    padding-top: clamp(8rem, 12vw, 11rem);
+    padding-bottom: clamp(5rem, 10vw, 9rem);
+  }
+
+  .shop-page__heading {
+    width: 100%;
+    max-width: none;
+  }
+
+  .shop-page__heading h1 {
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(3.8rem, 8vw, 7rem);
+    font-weight: 700;
+    color: var(--plum-800);
+  }
+
+  .shop-page__heading p:last-child {
+    width: 100%;
+    max-width: none;
+    color: var(--muted);
+    font-size: 1.08rem;
+  }
 </style>

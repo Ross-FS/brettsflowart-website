@@ -13,15 +13,29 @@ import SiteFooter from '../components/SiteFooter.astro';
   <main id="main-content">
     <Hero />
     <ContactCard />
-    <Biography />
+
     <section class="section shell" aria-labelledby="etsy-preview-title">
-      <div class="section-heading section-heading__action">
+      <div class="section-heading">
         <p class="eyebrow">Available now</p>
-        <h2 id="etsy-preview-title">Shop Brett's latest work</h2>
+        <h2 id="etsy-preview-title">Explore Brett's available work</h2>
         <p>Current artwork, prices and availability are supplied directly from Brett's Etsy store.</p>
       </div>
       <EtsyListings preview />
     </section>
+
+    <Biography />
   </main>
   <SiteFooter />
 </MainLayout>
+
+<style is:global>
+  #main-content .section-heading {
+    width: 100%;
+    max-width: none;
+  }
+
+  #main-content .section-heading > p:not(.eyebrow) {
+    width: 100%;
+    max-width: none;
+  }
+</style>

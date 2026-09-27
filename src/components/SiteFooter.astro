@@ -2,7 +2,7 @@
 const currentYear = new Date().getFullYear();
 ---
 <footer class="site-footer">
-  <div class="shell site-footer__grid">
+  <div class="shell site-footer__grid site-footer__grid--three">
     <div class="site-footer__brand">
       <img src="/images/logo-placeholder.svg" alt="" width="54" height="54" />
       <div><strong>Brett's Flow Art</strong><p>Original fluid acrylic artwork from Donnybrook, Western Australia.</p></div>
@@ -13,9 +13,24 @@ const currentYear = new Date().getFullYear();
     <div class="site-footer__contact">
       <h2>Contact</h2><a href="mailto:hello@brettsflowart.au">hello@brettsflowart.au</a><a href="tel:+61412566529">0412 566 529</a>
     </div>
-    <div class="site-footer__social">
-      <h2>Shop</h2><a href="https://brettsflowart.etsy.com" target="_blank" rel="noopener noreferrer">Brett's Etsy store ↗</a>
-    </div>
   </div>
   <div class="shell site-footer__bottom"><p>© {currentYear} Brett's Flow Art. All rights reserved.</p><p>Website for Brett Forbes-Stephen</p></div>
 </footer>
+
+<style>
+  .site-footer .site-footer__grid--three {
+    grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(9rem, 0.5fr));
+  }
+
+  @media (max-width: 960px) {
+    .site-footer .site-footer__grid--three {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .site-footer .site-footer__grid--three {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -3,10 +3,15 @@ interface Props {
   preview?: boolean;
 }
 const { preview = false } = Astro.props;
-const initialCount = preview ? 6 : 24;
+const initialCount = preview ? 3 : 24;
 ---
 
-<section class:list={['etsy-store', preview && 'etsy-store--preview']} data-etsy-store data-preview={preview ? 'true' : 'false'} data-initial-count={initialCount}>
+<section
+  class:list={['etsy-store', preview && 'etsy-store--preview']}
+  data-etsy-store
+  data-preview={preview ? 'true' : 'false'}
+  data-initial-count={initialCount}
+>
   <div class="etsy-store__status" data-etsy-status role="status">
     <span class="etsy-store__spinner" aria-hidden="true"></span>
     <span>Loading Brett's Etsy shop…</span>
@@ -40,12 +45,6 @@ const initialCount = preview ? 6 : 24;
       <button class="button button--primary" type="button" data-etsy-more>Load more</button>
     )}
   </div>
-
-  <div class="etsy-store__footer" data-etsy-footer hidden>
-    <a class="text-link" href="https://brettsflowart.etsy.com" target="_blank" rel="noopener noreferrer">
-      Visit Brett's Flow Art on Etsy →
-    </a>
-  </div>
 </section>
 
 <script>
@@ -62,6 +61,15 @@ const initialCount = preview ? 6 : 24;
         style: 'currency', currency: price.currency || 'AUD', maximumFractionDigits: 2,
       }).format(price.amount);
     } catch { return `${price.amount} ${price.currency || 'AUD'}`; }
+  };
+
+  const shuffle = (items) => {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
   };
 
   const card = (listing) => {
@@ -83,7 +91,6 @@ const initialCount = preview ? 6 : 24;
     const status = store.querySelector('[data-etsy-status]');
     const grid = store.querySelector('[data-etsy-grid]');
     const toolbar = store.querySelector('[data-etsy-toolbar]');
-    const footer = store.querySelector('[data-etsy-footer]');
     const moreWrap = store.querySelector('[data-etsy-more-wrap]');
     const moreButton = store.querySelector('[data-etsy-more]');
     const search = store.querySelector('[data-etsy-search]');
@@ -100,7 +107,6 @@ const initialCount = preview ? 6 : 24;
       grid.innerHTML = visible.map(card).join('');
       if (count) count.textContent = `${filtered.length} ${filtered.length === 1 ? 'work' : 'works'}`;
       moreWrap.hidden = preview ? filtered.length === 0 : shown >= filtered.length;
-      footer.hidden = false;
       if (!preview && filtered.length === 0) {
         grid.innerHTML = '<p class="etsy-store__empty">No listings match your search.</p>';
       }
@@ -125,18 +131,17 @@ const initialCount = preview ? 6 : 24;
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       all = Array.isArray(data.listings) ? data.listings : [];
-      filtered = [...all];
+      filtered = preview ? shuffle(all) : [...all];
       status.hidden = true;
       if (toolbar) toolbar.hidden = false;
       if (all.length === 0) {
         grid.innerHTML = '<p class="etsy-store__empty">No active Etsy listings are available at the moment.</p>';
-        footer.hidden = false;
         return;
       }
       render();
     } catch (error) {
       console.error(error);
-      status.innerHTML = '<strong>We could not load the Etsy listings right now.</strong><span>You can still browse the shop directly on Etsy.</span><a class="button button--primary" href="https://brettsflowart.etsy.com" target="_blank" rel="noopener noreferrer">Open Etsy shop</a>';
+      status.innerHTML = '<strong>We could not load the Etsy listings right now.</strong><span>Please try again shortly.</span>';
       status.classList.add('etsy-store__status--error');
     }
 
@@ -170,8 +175,7 @@ const initialCount = preview ? 6 : 24;
   .etsy-card__price { margin:0 0 .7rem; color:var(--plum-700); font-weight:600; }
   .etsy-card__link { color:var(--muted); font-size:.82rem; font-weight:600; text-decoration:none; }
   .etsy-card__link:hover { color:var(--plum-700); }
-  .etsy-store__more, .etsy-store__footer { display:flex; justify-content:center; padding-top:2rem; }
-  .etsy-store__footer { padding-top:1.3rem; }
+  .etsy-store__more { display:flex; justify-content:center; padding-top:2rem; }
   .etsy-store__empty { grid-column:1/-1; padding:4rem 1rem; color:var(--muted); text-align:center; }
   @media (max-width:900px) { .etsy-store__grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .etsy-store__toolbar { grid-template-columns:1fr 1fr; } .etsy-store__count { grid-column:1/-1; } }
   @media (max-width:620px) { .etsy-store__grid { grid-template-columns:1fr; } .etsy-store__toolbar { grid-template-columns:1fr; } .etsy-store__count { grid-column:auto; } }
