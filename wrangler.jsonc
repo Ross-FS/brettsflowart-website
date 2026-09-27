@@ -1,14 +1,22 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "brettsflowart-website",
-  "main": "./worker/index.js",
-  "compatibility_date": "2026-09-26",
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
-  },
-  "observability": {
-    "enabled": true
-  }
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "brettsflowart-website",
+	"main": "./worker/index.js",
+	"compatibility_date": "2026-09-26",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "ETSY_TOKENS",
+			"id": "ca3c05f6d5d64bf8ae142324d71b2fec"
+		}
+	]
 }
