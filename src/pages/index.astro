@@ -14,7 +14,7 @@ import SiteFooter from '../components/SiteFooter.astro';
     <Hero />
     <ContactCard />
 
-    <section class="section shell" aria-labelledby="etsy-preview-title">
+    <section class="section shell etsy-preview-section" aria-labelledby="etsy-preview-title">
       <div class="section-heading">
         <p class="eyebrow">Available now</p>
         <h2 id="etsy-preview-title">Explore Brett's available work</h2>
@@ -37,5 +37,21 @@ import SiteFooter from '../components/SiteFooter.astro';
   #main-content .section-heading > p:not(.eyebrow) {
     width: 100%;
     max-width: none;
+  }
+
+  /* Match homepage section headings to the Shop page heading. */
+  #main-content .section-heading h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.66rem, 5.6vw, 4.9rem);
+    font-weight: 700;
+  }
+
+  /* Reduce the gap between the Etsy preview CTA and About Brett to 30%. */
+  #main-content .etsy-preview-section {
+    padding-bottom: clamp(1.5rem, 3vw, 2.7rem);
+  }
+
+  #main-content #about {
+    padding-top: clamp(1.5rem, 3vw, 2.7rem);
   }
 </style>

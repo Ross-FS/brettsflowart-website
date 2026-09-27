@@ -6,7 +6,6 @@ interface Props {
   description?: string;
   canonicalPath?: string;
   ogImage?: string;
-  structuredData?: Record<string, unknown>;
 }
 
 const {
@@ -14,14 +13,14 @@ const {
   description = 'Original fluid acrylic artwork by Brett Forbes-Stephen, a self-taught paint-pouring artist based in Donnybrook, Western Australia.',
   canonicalPath = '/',
   ogImage = '/images/og-image.jpg',
-  structuredData,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://brettsflowart.au');
 const canonicalUrl = new URL(canonicalPath, siteUrl);
 const ogImageUrl = new URL(ogImage, siteUrl);
 
-const personSchema = {
+const schema = {
+  '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Brett Forbes-Stephen',
   jobTitle: 'Fluid Acrylic Artist',
@@ -37,22 +36,17 @@ const personSchema = {
     addressCountry: 'AU',
   },
 };
-
-const schema = {
-  '@context': 'https://schema.org',
-  '@graph': structuredData ? [personSchema, structuredData] : [personSchema],
-};
 ---
 
 <!doctype html>
-<html lang="en-AU" data-theme="light">
+<html lang="en-AU" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#4b286d" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#1e1921" />
+    <meta name="color-scheme" content="dark light" />
 
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href="/images/favicon-placeholder.svg" type="image/svg+xml" />
@@ -82,8 +76,7 @@ const schema = {
     <script is:inline>
       (() => {
         const storedTheme = localStorage.getItem('bretts-flow-art-theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = storedTheme ?? (systemPrefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = storedTheme ?? 'dark';
       })();
     </script>
 
